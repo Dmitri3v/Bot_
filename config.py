@@ -17,10 +17,16 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 ALLOWED_USER_ID = int(os.getenv("ALLOWED_USER_ID", "0"))
 
 # ==========================================
-# 🎵 CONFIGURACIÓN DE SPOTIFY
+# 🎵 CONFIGURACIÓN DE SPOTIFY (OPCIONAL)
 # ==========================================
+# Credenciales de Spotify Developer Dashboard
+# https://developer.spotify.com/dashboard
+# NOTA: Estas credenciales son OPCIONALES. 
+# El bot puede funcionar solo con Tidal.
+# Puedes configurarlas después desde Telegram con /setspotify
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID", "")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET", "")
+SPOTIFY_REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI", "https://example.com/callback")
 
 # ==========================================
 # 🌊 CONFIGURACIÓN DE TIDAL

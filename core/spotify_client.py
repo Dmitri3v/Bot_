@@ -3,18 +3,26 @@ import re
 import logging
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, BASE_DIR
+from config import BASE_DIR, SPOTIFY_REDIRECT_URI
+from .spotify_credentials import load_spotify_credentials
 import os
 
 logger = logging.getLogger(__name__)
 
 def get_spotify_client():
+    """Obtiene un cliente de Spotify. Retorna None si no está configurado."""
+    creds = load_spotify_credentials()
+    
+    if not creds['configured']:
+        logger.warning("⚠️ Spotify no está configurado. Las funciones de Spotify no estarán disponibles.")
+        return None
+    
     cache_path = os.path.join(BASE_DIR, ".spotify_cache")
     
     auth_manager = SpotifyOAuth(
-        client_id=SPOTIFY_CLIENT_ID,
-        client_secret=SPOTIFY_CLIENT_SECRET,
-        redirect_uri="https://example.com/callback",
+        client_id=creds['client_id'],
+        client_secret=creds['client_secret'],
+        redirect_uri=SPOTIFY_REDIRECT_URI,
         scope="playlist-read-private playlist-read-collaborative user-library-read",
         open_browser=True,
         cache_path=cache_path
