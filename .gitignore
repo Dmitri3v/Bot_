@@ -1,0 +1,12 @@
+# 🚫 Caché de autenticación de Spotify
+.spotify_cache
+.spotipy/
+
+# 🚫 Otros archivos sensibles
+.env
+config.py
+tidal-session.json
+bot.log
+library_manifest.json
+__pycache__/
+*.pyc
