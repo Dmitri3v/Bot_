@@ -1,12 +1,52 @@
-# 🚫 Caché de autenticación de Spotify
-.spotify_cache
-.spotipy/
-
-# 🚫 Otros archivos sensibles
+```
+# Environment
 .env
-config.py
-tidal-session.json
-bot.log
-library_manifest.json
+.env.local
+*.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Build artifacts
+dist/
+build/
+*.so
+*.dylib
+*.dll
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.so
+
+# System files
+.DS_Store
+Thumbs.db
+```
