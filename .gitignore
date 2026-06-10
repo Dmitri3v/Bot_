@@ -41,3 +41,7 @@ build/
 dist/
 *.egg-info/
 ```
+
+
+.spotify_cache
+tidal-session.json
