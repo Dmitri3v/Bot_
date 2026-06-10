@@ -1,3 +1,4 @@
+Nothing should be ignored based on the provided file changes. The modification of 'core/tidal_client.py' is a source code file and does not warrant any new ignore rules.
 ```
 # Python
 __pycache__/
