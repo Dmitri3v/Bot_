@@ -10,28 +10,33 @@ import os
 logger = logging.getLogger(__name__)
 
 def get_spotify_client():
-    """Obtiene un cliente de Spotify. Retorna None si no está configurado."""
+    """Obtiene un cliente de Spotify. Retorna None si no está configurado o falla la autenticación."""
     creds = load_spotify_credentials()
     
     if not creds['configured']:
-        logger.warning("⚠️ Spotify no está configurado. Las funciones de Spotify no estarán disponibles.")
+        logger.info("ℹ️ Spotify no está configurado. El bot funcionará solo con Tidal.")
         return None
     
     cache_path = os.path.join(BASE_DIR, ".spotify_cache")
     
-    auth_manager = SpotifyOAuth(
-        client_id=creds['client_id'],
-        client_secret=creds['client_secret'],
-        redirect_uri=SPOTIFY_REDIRECT_URI,
-        scope="playlist-read-private playlist-read-collaborative user-library-read",
-        open_browser=True,
-        cache_path=cache_path
-    )
-    
-    sp = spotipy.Spotify(auth_manager=auth_manager)
-    # Forzar autenticación si no hay caché
-    auth_manager.get_access_token(as_dict=False)
-    return sp
+    try:
+        auth_manager = SpotifyOAuth(
+            client_id=creds['client_id'],
+            client_secret=creds['client_secret'],
+            redirect_uri=SPOTIFY_REDIRECT_URI,
+            scope="playlist-read-private playlist-read-collaborative user-library-read",
+            open_browser=False,  # Nunca abrir navegador automáticamente
+            cache_path=cache_path
+        )
+        
+        sp = spotipy.Spotify(auth_manager=auth_manager)
+        # Intentar obtener token usando caché existente (sin redirigir al usuario)
+        auth_manager.get_access_token(as_dict=False, check_cache=True)
+        logger.info("✅ Spotify autenticado exitosamente usando credenciales guardadas.")
+        return sp
+    except Exception as e:
+        logger.warning(f"⚠️ Error inicializando Spotify: {e}. El bot funcionará solo con Tidal.")
+        return None
 
 def get_playlist_tracks(client, url):
     match = re.search(r'spotify\.com/(?:intl-[a-z]+/)?playlist/([a-zA-Z0-9]+)', url)
