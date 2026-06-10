@@ -16,16 +16,41 @@ def get_tidal_session():
             with open(SESSION_FILE, 'r', encoding='utf-8') as f:
                 session_data = json.load(f)
             
-            # tidalapi requiere estos 3 parámetros para restaurar la sesión
-            if session.load_session(
-                session_data.get('session_id'), 
-                session_data.get('country_code'), 
-                session_data.get('user_id')
-            ):
-                logger.info("✅ Sesión de Tidal cargada desde caché.")
-                return session
+            # Verificar si tenemos todos los datos necesarios
+            required_fields = ['session_id', 'country_code', 'user_id', 'token_type', 'access_token', 'refresh_token', 'expiry_time']
+            has_all_fields = all(field in session_data for field in required_fields)
+            
+            if has_all_fields:
+                # Restaurar sesión completa con tokens
+                session.session_id = session_data['session_id']
+                session.country_code = session_data['country_code']
+                
+                # Configurar tokens manualmente
+                session.token_type = session_data['token_type']
+                session.access_token = session_data['access_token']
+                session.refresh_token = session_data['refresh_token']
+                session.expiry_time = session_data['expiry_time']
+                
+                # Verificar si la sesión es válida
+                if session.check_login():
+                    logger.info("✅ Sesión de Tidal cargada desde caché.")
+                    return session
+                else:
+                    logger.warning("⚠️ La sesión guardada expiró. Intentando refrescar...")
+                    
+                    # Intentar refrescar el token
+                    try:
+                        session.token_refresh()
+                        if session.check_login():
+                            # Guardar sesión actualizada
+                            save_tidal_session(session, SESSION_FILE)
+                            logger.info("✅ Sesión de Tidal refrescada exitosamente.")
+                            return session
+                    except Exception as refresh_error:
+                        logger.warning(f"⚠️ No se pudo refrescar la sesión: {refresh_error}")
             else:
-                logger.warning("⚠️ La sesión guardada expiró o es inválida. Generando una nueva...")
+                logger.warning("⚠️ La sesión guardada está incompleta. Generando una nueva...")
+                
         except Exception as e:
             logger.warning(f"⚠️ No se pudo cargar la sesión guardada: {e}")
 
@@ -35,19 +60,27 @@ def get_tidal_session():
     
     # 3. Guardar la nueva sesión manualmente en un archivo JSON
     if SESSION_FILE and session.check_login():
-        try:
-            session_data = {
-                'session_id': session.session_id,
-                'country_code': session.country_code,
-                'user_id': session.user.id if hasattr(session, 'user') and session.user else None
-            }
-            with open(SESSION_FILE, 'w', encoding='utf-8') as f:
-                json.dump(session_data, f, indent=4)
-            logger.info("✅ Nueva sesión de Tidal guardada exitosamente.")
-        except Exception as e:
-            logger.error(f"❌ Error al guardar la sesión: {e}")
+        save_tidal_session(session, SESSION_FILE)
             
     return session
+
+def save_tidal_session(session, session_file):
+    """Guarda toda la información de la sesión de Tidal incluyendo tokens."""
+    try:
+        session_data = {
+            'session_id': session.session_id,
+            'country_code': session.country_code,
+            'user_id': session.user.id if hasattr(session, 'user') and session.user else None,
+            'token_type': session.token_type,
+            'access_token': session.access_token,
+            'refresh_token': session.refresh_token,
+            'expiry_time': session.expiry_time
+        }
+        with open(session_file, 'w', encoding='utf-8') as f:
+            json.dump(session_data, f, indent=4)
+        logger.info("✅ Nueva sesión de Tidal guardada exitosamente.")
+    except Exception as e:
+        logger.error(f"❌ Error al guardar la sesión: {e}")
 
 def find_track_on_tidal(session, artist, title, isrc=None):
     """Busca en Tidal usando lógica nativa (Sin dependencias externas)."""
