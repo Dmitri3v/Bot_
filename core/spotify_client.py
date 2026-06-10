@@ -29,9 +29,14 @@ def get_spotify_client():
             cache_path=cache_path
         )
         
+        # Intentar obtener token desde caché SIN interacción del usuario
+        token_info = auth_manager.get_cached_token()
+        
+        if not token_info:
+            logger.info("ℹ️ No hay token de Spotify en caché. El bot funcionará solo con Tidal hasta que se configure manualmente.")
+            return None
+        
         sp = spotipy.Spotify(auth_manager=auth_manager)
-        # Intentar obtener token usando caché existente (sin redirigir al usuario)
-        auth_manager.get_access_token(as_dict=False, check_cache=True)
         logger.info("✅ Spotify autenticado exitosamente usando credenciales guardadas.")
         return sp
     except Exception as e:
