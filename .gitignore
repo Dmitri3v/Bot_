@@ -29,4 +29,7 @@ htmlcov/
 # Dependencies cache
 .mypy_cache/
 .pytest_cache/
+
+tidal-session.json
+
 ```
