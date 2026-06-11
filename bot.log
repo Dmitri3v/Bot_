@@ -2,3 +2,15 @@
 2026-06-10 23:31:24,676 - core.spotify_client - INFO - ℹ️ Spotify no está configurado. El bot funcionará solo con Tidal.
 2026-06-10 23:31:24,676 - __main__ - INFO - 🎵 Estado de Spotify: ❌ No configurado (usando solo Tidal)
 2026-06-10 23:31:24,676 - core.tidal_client - INFO - ⏳ Iniciando nuevo login en Tidal...
+2026-06-10 18:51:18,055 - __main__ - INFO - 🔑 Inicializando clientes y escaneando biblioteca...
+2026-06-10 18:51:18,055 - core.spotify_client - INFO - ℹ️ No hay token de Spotify en caché. El bot funcionará solo con Tidal hasta que se configure manualmente.
+2026-06-10 18:51:18,063 - __main__ - INFO - 🎵 Estado de Spotify: ❌ No configurado (usando solo Tidal)
+2026-06-10 18:51:18,085 - core.tidal_client - WARNING - ⚠️ La sesión guardada está incompleta. Generando una nueva...
+2026-06-10 18:51:18,085 - core.tidal_client - INFO - ⏳ Iniciando nuevo login en Tidal...
+2026-06-10 18:51:32,809 - core.tidal_client - ERROR - ❌ Error al guardar la sesión: Object of type datetime is not JSON serializable
+2026-06-10 18:51:32,809 - core.scanner - INFO - ⚡ Manifiesto cargado en RAM: 0 huellas únicas.
+2026-06-10 18:51:32,809 - __main__ - INFO - ✅ Sistema listo. 0 huellas en biblioteca local.
+2026-06-10 18:51:33,403 - __main__ - INFO - 🟢 Servidor Sincronizador de Foxy (v9.0 - Armored & Diagnostic) iniciado.
+2026-06-10 18:51:34,416 - telegram.ext.Application - INFO - Application started
+2026-06-10 19:02:04,663 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2026-06-10 19:02:04,663 - telegram.ext.Application - INFO - Application.stop() complete
